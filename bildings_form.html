@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bildings Knockout.js</title>
+    <link rel="stylesheet" href="./styles_form.css">
+    <!-- Adicionando Knockout.js -->
+    <script src="./knockout-3.5.1.js"></script>
+</head>
+
+<body>
+    <form action="">
+        <div>
+            <h1>Bildings Knockout</h1>
+
+            <!-- o whith cria um contexto dentro dessa div, assim não preciso fazer: text: alerta.mensagem, posso usar só mensagem, ou qlq outra propriedade. -->
+            <div data-bind="with: alerta">
+                <!-- Concatenação de binds: -->
+                <p class="mensagem" data-bind="text: mensagem,
+                                                css: {alertDanger: (tipo === 'danger'), alertInfo: (tipo === 'info'), alertWarning: (tipo === 'warning')},
+                                                visible: mostrar ">
+              <!-- Condicional com as classes do CSS. -->
+              <!-- visible: como iniciamos mostrar como false, ele não ira aparecer na tela. -->
+                                            </p>
+            </div>
+        </div>
+
+        <div class="formContent">
+            <div>
+                <h2>Lista de item</h2>
+                <ul data-bind="foreach: lista">
+                    <!-- $data:  Ele te dá acesso ao item atual dentro do loop. Ou seja, estou acessando a propriedade .checado do item, se ela estiver true eu adiciono a classe itemChecked.-->
+                    <li data-bind="css: {itemChecked : $data.checado}">
+                        <!-- quando o checkbox do item estiver marcado a propriedade .checado vira true -->
+                        <input type="checkbox" data-bind="checked: $data.checado">
+                        <!-- AQUI VAMOS USAR UM BIND VIRTUAL PARA QUE O CHECKBOX CONTINUE APARECENDO EM TELA -->
+                        <!-- ko text: descricao --><!-- /ko -->
+                    </li>
+
+                    <!-- OUTRA OPÇÃO SERIA: -->
+                    <!-- <li class="itemChecked">
+                        <input type="checkbox" checked>
+                        <span data-bind="text: descricao"></span>
+                    </li> -->
+
+                </ul>
+                <div class="totalContainer">
+                    <p>Total:<span data-bind="text: lista().length"></span></p>
+
+                    <div>
+                        <input type="checkbox">:
+                        <span data-bind="text: itemsNaoChecados"></span>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" checked>:
+                        <span data-bind="text: itemsChecados"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="descricaoContainer">
+                <div>
+                    <h2>Descrição do item</h2>
+                    <label for="">Descrição do item:</label>
+                    <input type="text" data-bind="value: descricaoItem">
+                </div>
+
+                <button type="submit" data-bind="click: incluirItem">incluir Item</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+
+        function ViewModel() {
+            var self = this;
+            //Características do item: {descrição: '' , checado: false}
+            // Criação da lista de itens
+            self.lista = ko.observableArray([]);
+            self.descricaoItem = ko.observable("");
+
+            // criação do meu objeto de mensagem de alerta 
+            self.alerta = ko.observable({ mostrar: false, mensagem: 'concluido', tipo: 'danger' })
+
+            // Botão incluir item
+            self.incluirItem = function () {
+
+                // if(self.descricaoItem() === '') {
+                //     self.alerta({mostrar: true, mensagem: 'Preencha o campo', tipo: 'warning'})
+                // } else {
+                //     //estou criando meu objeto, onde descricao recebe o valor do meu input e a propriedade checado começa como false. Coloco um observable em .checado para ficar "olhando" quando ela mudar para true.
+                //     self.lista.push({descricao: self.descricaoItem() , checado: ko.observable(false)})
+                //     self.alerta({mostrar: true, mensagem: 'Item incluído', tipo: 'info'})
+                //     self.descricaoItem('')
+                // }
+                
+                if (self.descricaoItem() === '') {
+                    self.mostrarAlerta('Preencha o campo', 'warning');
+                } else {
+                    self.lista.push({ descricao: self.descricaoItem(), checado: ko.observable(false) });
+                    self.mostrarAlerta('Item incluído', 'info');
+                    self.descricaoItem('');
+                }
+            };
+            
+            // Alterando o mostrar para false depois de 1.5s
+            self.mostrarAlerta = function (mensagem, tipo) {
+                self.alerta({ mostrar: true, mensagem: mensagem, tipo: tipo });
+                setTimeout(function () {
+                    self.alerta({ mostrar: false, mensagem: '', tipo: '' });
+                }, 1500); // Oculta o alerta após 3 segundos
+            };
+
+            //Totalizadores
+            self.itemsChecados = ko.pureComputed(function () {
+                return self.lista().filter(function (item) {
+                    return item.checado();
+                }).length;
+            });
+
+            self.itemsNaoChecados = ko.pureComputed(function () {
+                return self.lista().filter(function (item) {
+                    return !item.checado();
+                }).length;
+            });
+
+
+        }
+
+        ko.applyBindings(new ViewModel());
+    </script>
+
+</body>
+
+</html>

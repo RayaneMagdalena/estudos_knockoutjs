@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bildings Context.js</title>
+    <link rel="stylesheet" href="./styles_form.css">
+    <!-- Adicionando Knockout.js -->
+    <script src="./knockout-3.5.1.js"></script>
+</head>
+
+<body>
+    <form action="">
+        <div>
+            <h1>Bildings Context</h1>
+
+            <div data-bind="with: alerta">
+               
+                <p class="mensagem" data-bind="text: mensagem,
+                                                css: {alertDanger: (tipo === 'danger'), alertInfo: (tipo === 'info'), alertWarning: (tipo === 'warning')},
+                                                visible: mostrar ">
+             
+                                            </p>
+            </div>
+        </div>
+
+        <div class="formContent">
+            <div>
+                <h2>Lista de item</h2>
+                <ul data-bind="foreach: lista">
+                
+                    <li data-bind="css: {itemChecked : $data.checado}">
+                  
+                        <input type="checkbox" data-bind="checked: $data.checado">
+                      
+                    </li>
+
+                
+
+                </ul>
+                <div class="totalContainer">
+                    <p>Total:<span data-bind="text: lista().length"></span></p>
+
+                    <div>
+                        <input type="checkbox">:
+                        <span data-bind="text: itemsNaoChecados"></span>
+                    </div>
+
+                    <div>
+                        <input type="checkbox" checked>:
+                        <span data-bind="text: itemsChecados"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="descricaoContainer">
+                <div>
+                    <h2>Descrição do item</h2>
+                    <label for="">Descrição do item:</label>
+                    <input type="text" data-bind="value: descricaoItem">
+                </div>
+
+                <button type="submit" data-bind="click: incluirItem">incluir Item</button>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+
+        function ViewModel() {
+            var self = this;
+    
+
+        ko.applyBindings(new ViewModel());
+        }
+    </script>
+</body>
+</html>

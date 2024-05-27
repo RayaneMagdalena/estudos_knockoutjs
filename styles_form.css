@@ -1,0 +1,48 @@
+body {
+    background-color: #fdf7f0;
+    padding: 10rem;
+}
+
+h1 {
+    text-align: center;
+}
+
+.mensagem {
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.alertInfo {
+    background-color: rgb(183, 243, 193);
+}
+
+.alertDanger {
+    background-color: rgb(245, 199, 199);
+}
+
+.alertWarning {
+    background-color: rgb(245, 242, 199);
+}
+
+.formContent {
+    background-color: #faead7;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 7rem;
+}
+
+.itemChecked {
+    color: #7a7979;
+    text-decoration: line-through;
+}
+
+.totalContainer {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.descricaoContainer button {
+    width: 100%;
+    margin-top: 2rem;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Knockout.js</title>
+    <script src="./knockout-3.5.1.js"></script>
+    <style>
+        .invalido {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Exemplo de Knockout.js</h1>
+        <input type="text" data-bind="value: email, css: { invalido: !emailValido() }" placeholder="Digite seu email" />
+        <p data-bind="visible: !emailValido()">Email inválido!</p>
+    </div>
+   
+   
+   <script>
+        function ViewModel() {
+            this.email = ko.observable('');
+            this.emailValido = ko.observable(true);
+
+            this.email.subscribe((novoValor) => {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                this.emailValido(regex.test(novoValor));
+            });
+        }
+
+        ko.applyBindings(new ViewModel());
+    </script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Knockout.js</title>
+    <!-- Adicionando Knockout.js via CDN -->
+  <script src="./knockout-3.5.1.js"></script>
+</head>
+<body>
+    <div>
+        <!-- EXEMPLO DOS BINDS -->
+        <h1>Exemplo de Knockout.js</h1>
+        <input type="text" data-bind="value: nomeUsuario" placeholder="Digite seu nome" />
+        <button data-bind="click: saudacao">Saudar</button>
+        <p data-bind="text: mensagem"></p>
+       
+        <ul data-bind="foreach: itens">
+            <li data-bind="text: nome"></li>
+        </ul>
+
+        <!-- Outra forma de iterar uma lista, usando somente $data -->
+        <ul data-bind="foreach: list">
+            <li data-bind="text:$data"></li>
+        </ul>
+    </div>
+
+    <div>
+        <h2>Subscribe</h2>
+        <input type="text" data-bind="value: inputSubscribe" placeholder="Digite um valor" />
+        <p data-bind="text: mensagemSubscribe"></p>
+    </div>
+
+    <div>
+        <h2>Computed Observer</h2>
+        <label>Quantidade: </label>
+        <input type="number" data-bind="value: quantidade" />
+        <br>
+        <label>Preço por item: </label>
+        <input type="number" data-bind="value: precoPorItem" />
+        <br>
+        <h2>Preço Total: <span data-bind="text: precoTotal"></span></h2>
+    </div>
+
+    <div>
+        <h2>Computed Observer Automático</h2>
+        <label>Quantidade: </label>
+        <input type="number" data-bind="value: quantidadeAutomatic" />
+        <br>
+        <label>Preço por item: </label>
+        <input type="number" data-bind="value: precoPorItemAutomatic" />
+        <br>
+        <h2>Preço Total: <span data-bind="text: computed()"></span></h2>
+    </div>
+
+    <script>
+        function ViewModel() {
+            this.nomeUsuario = ko.observable('');
+            this.mensagem = ko.observable('');
+            this.itens = ko.observableArray([
+                { nome: 'Item 1' },
+                { nome: 'Item 2' },
+                { nome: 'Item 3' },
+            ]);
+
+            // Lista usando $data
+            this.list = ko.observableArray([1, 2]);
+
+            this.saudacao = () => {
+                this.mensagem('Olá, ' + this.nomeUsuario() + '!');
+            };
+
+            // SUBSCRIBE
+
+            this.inputSubscribe = ko.observable('')
+            this.mensagemSubscribe = ko.observable('')
+
+          var subscribe =  this.inputSubscribe.subscribe((novoValor) => {
+                if (novoValor === '100') {
+                    this.mensagemSubscribe('Certo');
+                } else {
+                    this.mensagemSubscribe('Errado');
+                    subscribe.dispose();
+                }
+        } )
+
+        // COMPUTED OBSERDER
+        this.quantidade = ko.observable(0);
+            this.precoPorItem = ko.observable(0);
+
+            // Computed observable para calcular o preço total
+            this.precoTotal = ko.computed(() => {
+                return this.quantidade() * this.precoPorItem();
+            });
+        
+        //COMPUTED OBSERVER AUTOMATIC
+        this.quantidadeAutomatic = ko.observable(0);
+            this.precoPorItemAutomatic = ko.observable(0);
+
+            // Computed observable para calcular o preço total
+            this.computed = function()  {
+                return this.quantidadeAutomatic() * this.precoPorItemAutomatic();
+            };
+    }
+        ko.applyBindings(new ViewModel());
+    </script>
+</body>
+</html>
