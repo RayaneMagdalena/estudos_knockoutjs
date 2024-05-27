@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Bildings</title>
+    <link rel="stylesheet" href="./styles_form.css">
+    <!-- Adicionando Knockout.js -->
+</head>
+
+<body>
+    <div data-bind="template:{name:'cabecalhoTemplate'}"></div>
+
+    <!-- Usando template em listas: -->
+    <div>
+        <ul data-bind="template:{name:'itemListaTemplate', foreach: lista}">
+
+        </ul>
+    </div>
+
+
+
+    <script type="text/html" id="cabecalhoTemplate">
+        <h3 data-bind="text: tituloCabecalho"></h3>
+        <p>Assunto <span data-bind="text: assuntoCabecalho"></span></p>
+    </script>
+
+    <script type="text/html" id="itemListaTemplate">
+        <h3 data-bind="text: titulo"></h3>
+        <p data-bind="text: conteudo"></p>
+        <hr>
+    </script>
+
+
+
+    <script src="./knockout-3.5.1.js"></script>
+    <script type="text/javascript">
+        function ViewModel() {
+            var self = this;
+
+            self.tituloCabecalho = ko.observable("titulo")
+            self.assuntoCabecalho = ko.observable("assunto")
+
+            self.lista = ko.observableArray([
+                { titulo: "Item 1", conteudo: "conteudo do item 1" },
+                { titulo: "Item 2", conteudo: "conteudo do item 2" },
+                { titulo: "Item 3", conteudo: "conteudo do item 3" },
+            ])
+        }
+        ko.applyBindings(new ViewModel());
+    </script>
+</body>
+
+</html>
