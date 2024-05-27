@@ -34,6 +34,18 @@
     </table>
 
     <button data-bind="click: addSeat, enable: seats().length < 5">Reserve another seat</button>
+    <button data-bind="click: finalizeReservation, enable: seats().length > 0">Finalize Reservation</button>
+
+    <div data-bind="visible: reservationCompleted">
+        <h3>Reservation Details:</h3>
+        <div data-bind="foreach: completedReservations">
+            <p>Passenger: <span data-bind="text: name"></span></p>
+            <p>Meal: <span data-bind="text: meal().mealName"></span></p>
+            <p>Price: <span data-bind="text: formattedPrice"></span></p>
+            <hr>
+        </div>
+    </div>
+    
 
     <h3 data-bind="visible: totalSurcharge() > 0">
         Total surcharge: $<span data-bind="text: totalSurcharge().toFixed(2)"></span>
@@ -69,6 +81,9 @@
                 new SeatReservation("Bert", self.availableMeals[0])
             ]);
 
+            self.completedReservations = ko.observableArray([]);
+            self.reservationCompleted = ko.observable(false);
+
             // Add another seat
             self.addSeat = function () {
                 self.seats.push(new SeatReservation("", self.availableMeals[0]));
@@ -77,6 +92,12 @@
             // Remove a seat
             self.removeSeat = function (seat) {
                 self.seats.remove(seat);
+            }
+
+            // Finalize reservation
+            self.finalizeReservation = function () {
+                self.completedReservations(self.seats().slice()); // Clones the array
+                self.reservationCompleted(true);
             }
 
             self.totalSurcharge = ko.computed(function () {
